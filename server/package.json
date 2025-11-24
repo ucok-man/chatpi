@@ -7,7 +7,9 @@
     "build": "bun build src/index.ts --outdir dist"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/cors": "^1.4.0",
+    "elysia": "latest",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "bun-types": "latest"
