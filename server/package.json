@@ -1,0 +1,14 @@
+{
+  "name": "chatpi-server",
+  "version": "1.0.0",
+  "module": "src/index.js",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  }
+}
