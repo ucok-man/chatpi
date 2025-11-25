@@ -1,19 +1,41 @@
-import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
-import { Module } from "./modules";
-import { config } from "./plugins/config.plugin";
+import { createContainer } from "./container";
+import { createCors } from "./middlewares/cors.middleware";
+import { createErrorHandler } from "./middlewares/error-handler.middleware";
+import { createSwagger } from "./middlewares/swagger.middleware";
+import { createAuthPlugin } from "./modules/auth/auth.plugin";
+import { createAuthRoutes } from "./modules/auth/auth.routes";
+import { createHealthRoutes } from "./modules/health/health.routes";
 
-// TODO: change port to use
-const app = new Elysia({
-  name: "chatpi-server",
-})
-  .use(config)
-  .use(cors())
-  .use(Module.health)
-  .listen({
-    port: process.env.PORT || "4000",
+const container = createContainer();
+const { config, logger, db, auth, healthController } = container;
+
+// Connect to database
+db.connect()
+  .catch((error) => {
+    logger.error({ error }, "Failed to connect database");
+    process.exit(1);
+  })
+  .then(() => {
+    const app = new Elysia()
+      .use(createCors())
+      .use(createSwagger(config.VERSION))
+      .use(createErrorHandler(logger))
+      .use(createAuthPlugin(auth))
+      .use(createHealthRoutes(healthController))
+      .use(createAuthRoutes(auth));
+
+    app.listen(config.PORT, () => {
+      logger.info(`Server is running at http://localhost:${config.PORT}`);
+    });
   });
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+// Graceful shutdown
+const shutdown = async () => {
+  logger.info("Shutting down gracefully...");
+  await db.disconnect();
+  process.exit(0);
+};
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
