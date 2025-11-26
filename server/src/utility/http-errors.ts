@@ -52,6 +52,12 @@ export class ErrBadRequest extends HttpError {
   }
 }
 
+export class ErrUnauthorized extends HttpError {
+  constructor(msg: string) {
+    super(msg, StatusCodes.UNAUTHORIZED);
+  }
+}
+
 export class ErrUnprocessableEntity extends HttpError {
   constructor(msg: string | Record<string, any> | Record<string, any>[]) {
     super(msg, StatusCodes.UNPROCESSABLE_ENTITY);

@@ -16,3 +16,15 @@ export const SignUpSchema = z.object({
 });
 
 export type SignUpDTO = z.infer<typeof SignUpSchema>;
+
+export const SignInSchema = z.object({
+  email: z.email(),
+  password: z
+    .string()
+    .min(1, { message: "Password is required" })
+    .min(8, { message: "Password must be at least 8 characters" })
+    .regex(/[a-zA-Z]/, { message: "Password must contain at least one letter" })
+    .regex(/[0-9]/, { message: "Password must contain at least one number" }),
+});
+
+export type SignInDTO = z.infer<typeof SignInSchema>;
