@@ -16,6 +16,11 @@ export const createAuthDrizzle = (
       schema,
     }),
     basePath: "/internal",
+    advanced: {
+      database: {
+        generateId: "uuid",
+      },
+    },
     logger: {
       level: config.LOG_LEVEL,
       log(level, message, ...args) {

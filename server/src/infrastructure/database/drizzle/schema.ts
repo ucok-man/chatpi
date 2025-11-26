@@ -1,5 +1,4 @@
-import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { v7 } from "uuid";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -52,8 +51,6 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const chat = pgTable("room", {
-  id: uuid("id")
-    .primaryKey()
-    .$defaultFn(() => v7()),
-});
+// export const chat = pgTable("room", {
+//   id: uuid("id").defaultRandom().primaryKey(),
+// });
