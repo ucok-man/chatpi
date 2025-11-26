@@ -38,5 +38,16 @@ export const createAuthRoutes = (
       {
         body: SignInSchema,
       }
-    );
+    )
+    .post("/sign-out", async ({ headers, set }) => {
+      set.status = StatusCodes.OK;
+      const { response, headers: meta } = await authController.signout(headers);
+
+      // TODO: if there is bug, then this should also delete better-auth.session_token cookie.
+      meta.forEach((value, key) => {
+        set.headers[key] = value;
+      });
+
+      return response;
+    });
 };
