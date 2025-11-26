@@ -70,4 +70,4 @@ export const createAuthDrizzle = (
   });
 };
 
-export type Auth = ReturnType<typeof createAuthDrizzle>;
+export type AuthInstance = ReturnType<typeof createAuthDrizzle>;

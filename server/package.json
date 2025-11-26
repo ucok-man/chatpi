@@ -23,6 +23,7 @@
     "http-status-codes": "^2.3.0",
     "pino": "^10.1.0",
     "postgres": "^3.4.7",
+    "socket.io": "^4.8.1",
     "uuid": "^13.0.0",
     "zod": "^4.1.13"
   },

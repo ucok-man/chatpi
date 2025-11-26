@@ -1,5 +1,5 @@
 import { Headers } from "@/core/types";
-import { Auth } from "@/infrastructure/auth/better-auth";
+import { AuthInstance } from "@/infrastructure/auth/better-auth";
 import {
   ErrInternalServer,
   ErrUnauthorized,
@@ -9,7 +9,7 @@ import { APIError } from "better-auth/api";
 import { SignInDTO, SignUpDTO } from "./auth.dto";
 
 export class AuthController {
-  constructor(private auth: Auth) {}
+  constructor(private auth: AuthInstance) {}
 
   async signup(dto: SignUpDTO, headers: Headers) {
     try {

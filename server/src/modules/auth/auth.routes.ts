@@ -1,11 +1,11 @@
-import { Auth } from "@/infrastructure/auth/better-auth";
+import { AuthInstance } from "@/infrastructure/auth/better-auth";
 import { Elysia } from "elysia";
 import { StatusCodes } from "http-status-codes";
 import { AuthController } from "./auth.controller";
 import { SignInSchema, SignUpSchema } from "./auth.dto";
 
 export const createAuthRoutes = (
-  auth: Auth,
+  auth: AuthInstance,
   authController: AuthController
 ) => {
   return new Elysia({ prefix: "/api/auth" })

@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
   AnyPgColumn,
   boolean,
+  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -64,25 +65,21 @@ export const verification = pgTable("verification", {
 });
 
 // Room table
+export const RoomTypeValue = ["private"] as const;
+export const RoomTypeEnum = pgEnum("room_type", RoomTypeValue);
+
 export const room = pgTable("room", {
   id: uuid("id").defaultRandom().primaryKey(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-
-  isGroup: boolean("is_group").default(false).notNull(),
-  groupName: text("group_name"),
+  roomType: RoomTypeEnum("room_type").notNull(),
   lastMessageId: uuid("last_message_id"),
-
-  createdById: uuid("created_by_id")
-    .notNull()
-    .references(() => user.id),
 });
 
 // Room participants junction table
 export const roomParticipant = pgTable("room_participant", {
   id: uuid("id").defaultRandom().primaryKey(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-
   roomId: uuid("room_id")
     .notNull()
     .references(() => room.id, { onDelete: "cascade" }),
@@ -103,9 +100,11 @@ export const message = pgTable("message", {
   roomId: uuid("room_id")
     .notNull()
     .references(() => room.id, { onDelete: "cascade" }),
+
   senderId: uuid("sender_id")
     .notNull()
     .references(() => user.id),
+
   replyToId: uuid("reply_to_id").references((): AnyPgColumn => message.id),
 });
 
@@ -133,10 +132,6 @@ export const accountRelations = relations(account, ({ one }) => ({
 }));
 
 export const roomRelations = relations(room, ({ one, many }) => ({
-  createdBy: one(user, {
-    fields: [room.createdById],
-    references: [user.id],
-  }),
   lastMessage: one(message, {
     fields: [room.lastMessageId],
     references: [message.id],
