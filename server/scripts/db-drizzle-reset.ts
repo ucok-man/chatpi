@@ -1,6 +1,5 @@
 import * as schema from "@/infrastructure/database/drizzle/schema";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { reset } from "drizzle-seed";
 import postgres from "postgres";
 
 const queryClient = postgres(process.env.DATABASE_URL!, { max: 1 });
@@ -8,7 +7,10 @@ const db = drizzle(queryClient, { schema });
 
 async function main() {
   console.log("🔄 Resetting database...");
-  await reset(db, schema);
+  await db.execute(`
+    DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;
+  `);
   console.log("✅ Database reset complete.");
 }
 
