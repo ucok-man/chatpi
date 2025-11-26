@@ -1,6 +1,6 @@
+import { HealthController } from "@/modules/health/health.controller";
 import { Elysia } from "elysia";
 import { StatusCodes } from "http-status-codes";
-import { HealthController } from "./health.controller";
 
 export const createHealthRoutes = (healthController: HealthController) => {
   return new Elysia().get("/", ({ set }) => {

@@ -1,5 +1,5 @@
+import { Auth } from "@/infrastructure/auth/better-auth";
 import { Elysia } from "elysia";
-import { Auth } from "../../infrastructure/auth/better-auth";
 
 export const createAuthPlugin = (auth: Auth) => {
   return new Elysia({ name: "auth.plugin" }).derive(async ({ headers }) => {

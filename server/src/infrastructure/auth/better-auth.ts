@@ -1,9 +1,9 @@
+import { Config } from "@/config";
+import { ILogger } from "@/core/interfaces/logger.interfaces";
+import { DrizzleClient } from "@/infrastructure/database/drizzle/drizzle.client";
+import * as schema from "@/infrastructure/database/drizzle/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { Config } from "../../config";
-import { ILogger } from "../../core/interfaces/logger.interfaces";
-import { DrizzleClient } from "../database/drizzle/drizzle.client";
-import * as schema from "../database/drizzle/schema";
 
 export const createAuthDrizzle = (
   config: Config,

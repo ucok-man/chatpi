@@ -1,11 +1,11 @@
+import { createContainer } from "@/container";
+import { createCors } from "@/middlewares/cors.middleware";
+import { createErrorHandler } from "@/middlewares/error-handler.middleware";
+import { createSwagger } from "@/middlewares/swagger.middleware";
+import { createAuthPlugin } from "@/modules/auth/auth.plugin";
+import { createAuthRoutes } from "@/modules/auth/auth.routes";
+import { createHealthRoutes } from "@/modules/health/health.routes";
 import { Elysia } from "elysia";
-import { createContainer } from "./container";
-import { createCors } from "./middlewares/cors.middleware";
-import { createErrorHandler } from "./middlewares/error-handler.middleware";
-import { createSwagger } from "./middlewares/swagger.middleware";
-import { createAuthPlugin } from "./modules/auth/auth.plugin";
-import { createAuthRoutes } from "./modules/auth/auth.routes";
-import { createHealthRoutes } from "./modules/health/health.routes";
 
 const container = createContainer();
 const { config, logger, db, auth, healthController, authController } =

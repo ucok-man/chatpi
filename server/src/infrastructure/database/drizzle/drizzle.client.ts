@@ -1,8 +1,8 @@
+import { Config } from "@/config";
+import { IDatabaseClient } from "@/core/interfaces/database.interfaces";
+import { ILogger } from "@/core/interfaces/logger.interfaces";
 import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { Config } from "../../../config";
-import { IDatabaseClient } from "../../../core/interfaces/database.interfaces";
-import { ILogger } from "../../../core/interfaces/logger.interfaces";
 import * as schema from "./schema";
 
 export class DrizzleClient implements IDatabaseClient {

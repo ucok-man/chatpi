@@ -1,5 +1,5 @@
+import { AuthContext } from "@/core/types";
 import { Elysia } from "elysia";
-import { AuthContext } from "../core/types";
 
 export const requireAuth = () => {
   return new Elysia({ name: "require-auth.middleware" }).derive((ctx) => {

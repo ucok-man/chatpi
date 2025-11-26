@@ -1,11 +1,11 @@
-import { APIError } from "better-auth/api";
-import { Headers } from "../../core/types";
-import { Auth } from "../../infrastructure/auth/better-auth";
+import { Headers } from "@/core/types";
+import { Auth } from "@/infrastructure/auth/better-auth";
 import {
   ErrInternalServer,
   ErrUnauthorized,
   ErrUnprocessableEntity,
-} from "../../utility/http-errors";
+} from "@/utility/http-errors";
+import { APIError } from "better-auth/api";
 import { SignInDTO, SignUpDTO } from "./auth.dto";
 
 export class AuthController {

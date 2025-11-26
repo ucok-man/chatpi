@@ -1,11 +1,11 @@
-import { Config, createConfig } from "./config";
-import { IDatabaseClient } from "./core/interfaces/database.interfaces";
-import { ILogger } from "./core/interfaces/logger.interfaces";
-import { Auth, createAuthDrizzle } from "./infrastructure/auth/better-auth";
-import { DrizzleClient } from "./infrastructure/database/drizzle/drizzle.client";
-import { PinoLogger } from "./infrastructure/logger/pino.logger";
-import { AuthController } from "./modules/auth/auth.controller";
-import { HealthController } from "./modules/health/health.controller";
+import { Config, createConfig } from "@/config";
+import { IDatabaseClient } from "@/core/interfaces/database.interfaces";
+import { ILogger } from "@/core/interfaces/logger.interfaces";
+import { Auth, createAuthDrizzle } from "@/infrastructure/auth/better-auth";
+import { DrizzleClient } from "@/infrastructure/database/drizzle/drizzle.client";
+import { PinoLogger } from "@/infrastructure/logger/pino.logger";
+import { AuthController } from "@/modules/auth/auth.controller";
+import { HealthController } from "@/modules/health/health.controller";
 
 export interface Container {
   config: Config;

@@ -1,6 +1,6 @@
+import { Config } from "@/config";
+import { ILogger } from "@/core/interfaces/logger.interfaces";
 import pino, { Logger } from "pino";
-import { Config } from "../../config";
-import { ILogger } from "../../core/interfaces/logger.interfaces";
 
 export class PinoLogger implements ILogger {
   private logger: Logger;

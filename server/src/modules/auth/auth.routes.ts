@@ -1,6 +1,6 @@
+import { Auth } from "@/infrastructure/auth/better-auth";
 import { Elysia } from "elysia";
 import { StatusCodes } from "http-status-codes";
-import { Auth } from "../../infrastructure/auth/better-auth";
 import { AuthController } from "./auth.controller";
 import { SignInSchema, SignUpSchema } from "./auth.dto";
 

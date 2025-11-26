@@ -1,12 +1,12 @@
-import { Elysia } from "elysia";
-import { StatusCodes } from "http-status-codes";
-import { ILogger } from "../core/interfaces/logger.interfaces";
+import { ILogger } from "@/core/interfaces/logger.interfaces";
 import {
   ErrInternalServer,
   ErrNotFound,
   ErrUnprocessableEntity,
   HttpError,
-} from "../utility/http-errors";
+} from "@/utility/http-errors";
+import { Elysia } from "elysia";
+import { StatusCodes } from "http-status-codes";
 
 // TODO: complete this
 
