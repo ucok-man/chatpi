@@ -4,6 +4,7 @@ import { ILogger } from "./core/interfaces/logger.interfaces";
 import { Auth, createAuthDrizzle } from "./infrastructure/auth/better-auth";
 import { DrizzleClient } from "./infrastructure/database/drizzle/drizzle.client";
 import { PinoLogger } from "./infrastructure/logger/pino.logger";
+import { AuthController } from "./modules/auth/auth.controller";
 import { HealthController } from "./modules/health/health.controller";
 
 export interface Container {
@@ -12,6 +13,7 @@ export interface Container {
   db: IDatabaseClient;
   auth: Auth;
   healthController: HealthController;
+  authController: AuthController;
 }
 
 export const createContainer = (): Container => {
@@ -37,6 +39,7 @@ export const createContainer = (): Container => {
 
   // Modules
   const healthController = new HealthController(config);
+  const authController = new AuthController(auth);
 
   return {
     config,
@@ -44,5 +47,6 @@ export const createContainer = (): Container => {
     db,
     auth,
     healthController,
+    authController,
   };
 };

@@ -1,4 +1,4 @@
-import { Session, User } from "better-auth/*";
+import { Session, User } from "better-auth";
 import { Context } from "elysia";
 
 export type AuthContext = Context & {
@@ -7,3 +7,5 @@ export type AuthContext = Context & {
     session: Session | null;
   };
 };
+
+export type Headers = Context["headers"];

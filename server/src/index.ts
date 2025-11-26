@@ -8,7 +8,8 @@ import { createAuthRoutes } from "./modules/auth/auth.routes";
 import { createHealthRoutes } from "./modules/health/health.routes";
 
 const container = createContainer();
-const { config, logger, db, auth, healthController } = container;
+const { config, logger, db, auth, healthController, authController } =
+  container;
 
 // Connect to database
 db.connect()
@@ -23,7 +24,7 @@ db.connect()
       .use(createErrorHandler(logger))
       .use(createAuthPlugin(auth))
       .use(createHealthRoutes(healthController))
-      .use(createAuthRoutes(auth));
+      .use(createAuthRoutes(auth, authController));
 
     app.listen(config.PORT, () => {
       logger.info(`Server is running at http://localhost:${config.PORT}`);
