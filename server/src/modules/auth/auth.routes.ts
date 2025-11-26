@@ -41,13 +41,10 @@ export const createAuthRoutes = (
     )
     .post("/sign-out", async ({ headers, set }) => {
       set.status = StatusCodes.OK;
-      const { response, headers: meta } = await authController.signout(headers);
+      // NOTE: if you customize your cookie on name. This should mirror on it.
+      set.headers["set-cookie"] =
+        "better-auth.session_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax";
 
-      // TODO: if there is bug, then this should also delete better-auth.session_token cookie.
-      meta.forEach((value, key) => {
-        set.headers[key] = value;
-      });
-
-      return response;
+      return await authController.signout(headers);
     });
 };

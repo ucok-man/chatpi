@@ -64,7 +64,6 @@ export class AuthController {
     try {
       return await this.auth.api.signOut({
         headers: headers as any,
-        returnHeaders: true,
       });
     } catch (error: any) {
       throw new ErrInternalServer(error);
