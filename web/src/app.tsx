@@ -1,4 +1,5 @@
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { NuqsAdapter } from "nuqs/adapters/tanstack-router";
 import { useEffect } from "react";
 import TanstackQuery from "./components/provider/tanstack-query";
 import { Toaster } from "./components/ui/sonner";
@@ -28,8 +29,10 @@ export default function App() {
 
   return (
     <TanstackQuery>
-      <RouterProvider router={router} context={{ auth }} />
-      <Toaster />
+      <NuqsAdapter>
+        <RouterProvider router={router} context={{ auth }} />
+        <Toaster />
+      </NuqsAdapter>
     </TanstackQuery>
   );
 }
