@@ -19,6 +19,7 @@ export class AuthController {
           name: dto.name,
           email: dto.email,
           password: dto.password,
+          image: dto.image,
         },
       });
     } catch (error: any) {

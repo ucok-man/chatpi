@@ -13,6 +13,8 @@ export const SignUpSchema = z.object({
     .min(8, { message: "Password must be at least 8 characters" })
     .regex(/[a-zA-Z]/, { message: "Password must contain at least one letter" })
     .regex(/[0-9]/, { message: "Password must contain at least one number" }),
+
+  image: z.url(),
 });
 
 export type SignUpDTO = z.infer<typeof SignUpSchema>;
