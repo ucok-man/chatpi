@@ -9,7 +9,7 @@ export default function TabContact() {
   const query = useSearch({ from: "/chat" });
 
   const { data, isPending, error } = useQuery({
-    queryKey: ["contact:all"],
+    queryKey: ["contact:all", query.search],
     queryFn: async () => {
       if (query.search) {
         return (await api.get(`/user?search=${query.search}`)).data as User[];

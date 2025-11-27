@@ -7,7 +7,7 @@ export default function TabContent() {
   const { tab } = useChatNavigationStore();
 
   return (
-    <div className="h-full px-3 py-6">
+    <div className="h-full px-3 py-6 border-r-2 border-border">
       <div className="mb-6">
         <h2 className="text-3xl font-semibold ">ChatApp</h2>
       </div>

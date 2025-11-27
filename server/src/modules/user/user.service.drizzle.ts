@@ -31,13 +31,16 @@ export class UserServiceDrizzle implements IUserService {
     }
 
     // PostgreSQL full-text search
+    const searchQuery = search.trim().split(" ").join(":* || ") + ":*";
+    console.log({ searchQuery });
+
     const result = await this.db
       .client()
       .select()
       .from(user)
       .where(
         and(
-          sql`to_tsvector('english', ${user.name} || ' ' || ${user.email}) @@ plainto_tsquery('english', ${search})`,
+          sql`to_tsvector('simple', ${user.name} || ' ' || ${user.email}) @@ to_tsquery('simple', ${searchQuery})`,
           ne(user.id, auth.user.id)
         )
       )

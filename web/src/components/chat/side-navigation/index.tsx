@@ -32,7 +32,7 @@ export default function SideNavigation() {
   });
 
   return (
-    <div className="w-fit h-full px-3 py-6 border-r border-border">
+    <div className="w-fit h-full px-3 py-6 border-r-2 border-border">
       <div className="flex flex-col h-full">
         {/* TOP */}
         <nav className="flex-1 flex flex-col gap-6">
