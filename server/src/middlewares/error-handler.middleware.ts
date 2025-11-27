@@ -1,5 +1,6 @@
 import { ILogger } from "@/core/interfaces/logger.interfaces";
 import {
+  ErrBadRequest,
   ErrInternalServer,
   ErrNotFound,
   ErrUnprocessableEntity,
@@ -26,6 +27,11 @@ export const createErrorHandler = (logger: ILogger) => {
       if (code === "NOT_FOUND") {
         set.status = StatusCodes.NOT_FOUND;
         return new ErrNotFound().toResponse();
+      }
+
+      if (code === "PARSE") {
+        set.status = 400;
+        return new ErrBadRequest("Invalid json input provided");
       }
 
       if (code === "VALIDATION") {
