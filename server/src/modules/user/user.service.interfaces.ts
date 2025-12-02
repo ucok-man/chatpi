@@ -1,5 +1,5 @@
 import { AuthSession } from "@/core/types";
-import { User } from "@/infrastructure/database/drizzle/schema";
+import { User } from "@root/prisma/generated/client";
 
 export interface IUserService {
   getAll(

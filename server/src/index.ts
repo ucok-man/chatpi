@@ -6,6 +6,7 @@ import { createAuthPlugin } from "@/modules/auth/auth.plugin";
 import { createAuthRoutes } from "@/modules/auth/auth.routes";
 import { createHealthRoutes } from "@/modules/health/health.routes";
 import { Elysia } from "elysia";
+import { createRoomRoutes } from "./modules/room/room.routes";
 import { createUserRoutes } from "./modules/user/user.routes";
 
 const container = createContainer();
@@ -17,6 +18,7 @@ const {
   healthController,
   authController,
   userController,
+  roomController,
 } = container;
 
 // Connect to database
@@ -33,7 +35,8 @@ db.connect()
       .use(createAuthPlugin(auth))
       .use(createHealthRoutes(healthController))
       .use(createAuthRoutes(auth, authController))
-      .use(createUserRoutes(userController));
+      .use(createUserRoutes(userController))
+      .use(createRoomRoutes(roomController));
 
     app.listen(config.PORT, () => {
       logger.info(`Server is running at http://localhost:${config.PORT}`);

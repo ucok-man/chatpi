@@ -1,19 +1,18 @@
 import { Config } from "@/config";
 import { ILogger } from "@/core/interfaces/logger.interfaces";
-import { DrizzleClient } from "@/infrastructure/database/drizzle/drizzle.client";
-import * as schema from "@/infrastructure/database/drizzle/schema";
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { PrismaDbClient } from "../database/prisma/client";
 
-export const createAuthDrizzle = (
+export const createAuthPrisma = (
   config: Config,
-  db: DrizzleClient,
+  db: PrismaDbClient,
   logger: ILogger
 ) => {
   return betterAuth({
-    database: drizzleAdapter(db.client(), {
-      provider: "pg",
-      schema,
+    database: prismaAdapter(db.client(), {
+      provider: "postgresql",
+      transaction: true,
     }),
     basePath: "/internal",
     advanced: {
@@ -70,4 +69,4 @@ export const createAuthDrizzle = (
   });
 };
 
-export type AuthInstance = ReturnType<typeof createAuthDrizzle>;
+export type AuthInstance = ReturnType<typeof createAuthPrisma>;

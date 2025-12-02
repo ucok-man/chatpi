@@ -6,7 +6,7 @@ const schema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
   PORT: z.string().transform(Number).default(4000),
-  DATABASE_PROVIDER: z.enum(["drizzle"]),
+  DATABASE_PROVIDER: z.enum(["prisma"]),
   DATABASE_URL: z.url(),
   DATABASE_MAX_OPEN_CONN: z.number().positive().max(80).default(25),
   DATABASE_MAX_IDLE_TIMEOUT: z.number().positive().default(15),

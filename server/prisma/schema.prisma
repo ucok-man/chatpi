@@ -1,0 +1,108 @@
+generator client {
+    provider        = "prisma-client"
+    output          = "./generated"
+    previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum RoomType {
+    private
+}
+
+model User {
+    id        String   @id @default(uuid()) @db.Uuid
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    name          String
+    email         String  @unique
+    emailVerified Boolean @default(false)
+    image         String?
+    role          String  @default("user")
+
+    sessions Session[]
+    accounts Account[]
+    messages Message[] @relation("MessageSender") // all the messages user ever created
+    rooms    Room[]    @relation("RoomParticipants") // all room where user belong to
+}
+
+model Session {
+    id        String   @id @default(uuid()) @db.Uuid
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    expiresAt DateTime
+    token     String   @unique
+    ipAddress String?
+    userAgent String?
+
+    userId String @db.Uuid
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+    id        String   @id @default(uuid()) @db.Uuid
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    accountId             String
+    providerId            String
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    password              String?
+
+    userId String @db.Uuid
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+    id        String    @id @default(uuid()) @db.Uuid
+    createdAt DateTime? @default(now())
+    updatedAt DateTime? @updatedAt
+
+    identifier String
+    value      String
+    expiresAt  DateTime
+}
+
+model Room {
+    id        String   @id @default(uuid()) @db.Uuid
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    roomType RoomType
+
+    lastMessageId String?  @db.Uuid
+    lastMessage   Message? @relation("RoomLastMessage", fields: [lastMessageId], references: [id])
+
+    participants User[]    @relation("RoomParticipants")
+    messages     Message[] @relation("RoomMessages")
+}
+
+model Message {
+    id        String   @id @default(uuid()) @db.Uuid
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    content String?
+    image   String?
+
+    roomId String @db.Uuid
+    room   Room   @relation("RoomMessages", fields: [roomId], references: [id], onDelete: Cascade)
+
+    senderId String @db.Uuid
+    sender   User   @relation("MessageSender", fields: [senderId], references: [id])
+
+    replyToId String?   @db.Uuid
+    replyTo   Message?  @relation("MessageReplies", fields: [replyToId], references: [id])
+    replies   Message[] @relation("MessageReplies")
+
+    roomsAsLastMessage Room[] @relation("RoomLastMessage") // any room where this message is become last message.
+}

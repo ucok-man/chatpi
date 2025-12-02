@@ -1,20 +1,29 @@
 import { AuthSession } from "@/core/types";
-import { ErrBadRequest } from "@/utility/http-errors";
-import { CreateRoomDTO } from "./room.dto";
+import { ErrUnprocessableEntity } from "@/utility/http-errors";
+import { CreatePrivateRoomDTO } from "./room.dto";
 import { IRoomService } from "./room.service.interfaces";
 
 export class RoomController {
   constructor(private roomService: IRoomService) {}
 
-  async create(dto: CreateRoomDTO, auth: AuthSession) {
-    // Validate participants
-    const participantIds = await this.roomService.validateParticipantIds(
-      dto.participantIds
+  async findOrCreatePrivateRoom(dto: CreatePrivateRoomDTO, auth: AuthSession) {
+    const isValid = this.roomService.isValidParticipantId(
+      dto.targetParticipantId
     );
-    participantIds.push(auth.user.id);
-
-    if (dto.isGroup) {
-      throw new ErrBadRequest("Not Implemented Yet!");
+    if (!isValid) {
+      throw ErrUnprocessableEntity.construct([
+        {
+          path: "targetParticipantId",
+          message: "Invalid participant id does not exist.",
+        },
+      ]);
     }
+
+    const rm = await this.roomService.findOrCreatePrivateRoom([
+      dto.targetParticipantId,
+      auth.user.id,
+    ]);
+
+    return rm;
   }
 }

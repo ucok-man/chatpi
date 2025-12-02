@@ -6,7 +6,6 @@ export const requireAuth = () => {
   return new Elysia({ name: "require-auth.middleware" })
     .derive((ctx) => {
       const { auth } = ctx as ContextWithAuth;
-      console.log(auth);
       if (!auth?.user || !auth?.session) {
         throw new ErrUnauthorized(
           "this resources require credential to be accessed"
