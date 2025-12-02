@@ -16,3 +16,22 @@ export type Metadata = {
   nextPage: number | null;
   lastPage: number;
 };
+
+export type Room = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  roomType: "private";
+  lastMessageId: string | null;
+};
+
+export type Message = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  image: string | null;
+  content: string | null;
+  roomId: string;
+  senderId: string;
+  replyToId: string | null;
+};

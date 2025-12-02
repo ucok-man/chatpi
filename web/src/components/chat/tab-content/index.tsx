@@ -1,10 +1,10 @@
 import SearchBox from "@/components/search-box";
-import { useChatNavigationStore } from "@/hooks/use-chat-navigation-store";
-import TabChat from "../tab-chat";
+import { useChatTabContent } from "@/hooks/use-chat-tab-content";
 import TabContact from "../tab-contact";
+import TabMyChat from "../tab-mychat";
 
 export default function TabContent() {
-  const { tab } = useChatNavigationStore();
+  const { tab } = useChatTabContent();
 
   return (
     <div className="h-full px-3 py-6 border-r-2 border-border">
@@ -16,7 +16,7 @@ export default function TabContent() {
         <SearchBox />
       </div>
 
-      {tab === "chat" && <TabChat />}
+      {tab === "mychat" && <TabMyChat />}
       {tab === "contact" && <TabContact />}
     </div>
   );

@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useChatNavigationStore } from "@/hooks/use-chat-navigation-store";
+import { useChatTabContent } from "@/hooks/use-chat-tab-content";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ import { LogOut, MessageCircleMore, Users } from "lucide-react";
 export default function SideNavigation() {
   const { auth } = useLoaderData({ from: "/chat" });
   const router = useRouter();
-  const { setTab, tab } = useChatNavigationStore();
+  const { setTab, tab } = useChatTabContent();
 
   const signout = useMutation({
     mutationFn: async () => {
@@ -37,10 +37,10 @@ export default function SideNavigation() {
         {/* TOP */}
         <nav className="flex-1 flex flex-col gap-6">
           <div
-            onClick={() => setTab("chat")}
+            onClick={() => setTab("mychat")}
             className={cn(
               "cursor-pointer text-muted-foreground",
-              tab === "chat" && "text-green-600"
+              tab === "mychat" && "text-green-600"
             )}
           >
             <MessageCircleMore className="size-5.5" />

@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
 type State = {
-  tab: "contact" | "chat";
+  tab: "contact" | "mychat";
 };
 
 type Action = {
-  setTab: (tab: "contact" | "chat") => void;
+  setTab: (tab: "contact" | "mychat") => void;
 };
 
-export const useChatNavigationStore = create<State & Action>((set) => ({
+export const useChatTabContent = create<State & Action>((set) => ({
   tab: "contact",
   setTab: (tabname) => set(() => ({ tab: tabname })),
 }));

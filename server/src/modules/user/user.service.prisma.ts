@@ -20,10 +20,13 @@ export class UserServicePrisma implements IUserService {
     // No search term - return all with pagination
     if (!search || search.trim() === "") {
       const users = await this.db.client().user.findMany({
+        where: { id: { not: auth.user.id } },
         take: pageSize,
         skip: offset,
       });
-      const count = await this.db.client().user.count({});
+      const count = await this.db.client().user.count({
+        where: { id: { not: auth.user.id } },
+      });
 
       const lastPage = Math.ceil(count / pageSize);
       const nextPage = page < lastPage ? page + 1 : null;
@@ -45,6 +48,7 @@ export class UserServicePrisma implements IUserService {
 
     const users = await this.db.client().user.findMany({
       where: {
+        id: { not: auth.user.id },
         OR: [
           {
             name: {
@@ -64,6 +68,7 @@ export class UserServicePrisma implements IUserService {
 
     const count = await this.db.client().user.count({
       where: {
+        id: { not: auth.user.id },
         OR: [
           {
             name: {

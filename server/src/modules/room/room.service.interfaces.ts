@@ -1,4 +1,5 @@
-import { Room, User } from "@root/prisma/generated/client";
+import { Metadata } from "@/core/types";
+import { Message, Room, User } from "@root/prisma/generated/client";
 
 export interface IRoomService {
   isValidParticipantId(id: string): Promise<boolean>;
@@ -12,4 +13,18 @@ export interface IRoomService {
   findPrivateRoomFromParticipant(
     participantIds: string[]
   ): Promise<Room | null>;
+
+  findAllRoomFromParticipant(
+    param: {
+      search?: string | null;
+      page: number;
+      pageSize: number;
+    },
+    participantId: string
+  ): Promise<{
+    rooms: (Room & { lastMessage: Message | null } & {
+      participants: User[];
+    })[];
+    meta: Metadata;
+  }>;
 }

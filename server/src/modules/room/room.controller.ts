@@ -1,6 +1,6 @@
 import { AuthSession } from "@/core/types";
 import { ErrUnprocessableEntity } from "@/utility/http-errors";
-import { CreatePrivateRoomDTO } from "./room.dto";
+import { CreatePrivateRoomDTO, FindAllMyRoomDTO } from "./room.dto";
 import { IRoomService } from "./room.service.interfaces";
 
 export class RoomController {
@@ -19,11 +19,16 @@ export class RoomController {
       ]);
     }
 
-    const rm = await this.roomService.findOrCreatePrivateRoom([
+    return await this.roomService.findOrCreatePrivateRoom([
       dto.targetParticipantId,
       auth.user.id,
     ]);
+  }
 
-    return rm;
+  async findAllMyRoom(param: FindAllMyRoomDTO, auth: AuthSession) {
+    return await this.roomService.findAllRoomFromParticipant(
+      param,
+      auth.user.id
+    );
   }
 }

@@ -1,6 +1,7 @@
+import { Metadata } from "@/core/types";
 import { PrismaDbClient } from "@/infrastructure/database/prisma/client";
 import { ErrInternalServer } from "@/utility/http-errors";
-import { Room, User } from "@root/prisma/generated/client";
+import { Message, Room, User } from "@root/prisma/generated/client";
 import { IRoomService } from "./room.service.interfaces";
 
 export class RoomServicePrisma implements IRoomService {
@@ -80,7 +81,12 @@ export class RoomServicePrisma implements IRoomService {
         participants: true,
       },
     });
-    if (!room?.participants) {
+
+    if (!room) {
+      return null;
+    }
+
+    if (!room.participants) {
       throw new ErrInternalServer(
         new Error("Room found but it should have participants")
       );
@@ -106,6 +112,139 @@ export class RoomServicePrisma implements IRoomService {
       lastMessageId: room.lastMessageId,
       roomType: room.roomType,
       updatedAt: room.updatedAt,
+    };
+  }
+
+  async findAllRoomFromParticipant(
+    param: {
+      search?: string | null;
+      page: number;
+      pageSize: number;
+    },
+    participantId: string
+  ): Promise<{
+    rooms: (Room & { lastMessage: Message | null } & {
+      participants: User[];
+    })[];
+    meta: Metadata;
+  }> {
+    const { search, page, pageSize } = param;
+    const offset = (page - 1) * pageSize;
+
+    // No search term - return all with pagination
+    if (!search || search.trim() === "") {
+      const rooms = await this.db.client().room.findMany({
+        where: {
+          participants: {
+            some: { id: participantId },
+          },
+          lastMessageId: {
+            not: null,
+          },
+        },
+        include: {
+          participants: true,
+          lastMessage: true,
+        },
+      });
+
+      const count = await this.db.client().room.count({
+        where: {
+          participants: {
+            some: { id: participantId },
+          },
+          lastMessageId: {
+            not: null,
+          },
+        },
+      });
+
+      const lastPage = Math.ceil(count / pageSize);
+      const nextPage = page < lastPage ? page + 1 : null;
+
+      return {
+        rooms: rooms,
+        meta: {
+          total: count,
+          pageSize: pageSize,
+          currentPage: page,
+          nextPage: nextPage,
+          lastPage: lastPage,
+        },
+      };
+    }
+
+    // PostgreSQL full-text search
+    const searchQuery = search.trim().split(" ").join(":* || ") + ":*";
+
+    const rooms = await this.db.client().room.findMany({
+      where: {
+        participants: {
+          some: {
+            id: participantId,
+            OR: [
+              {
+                name: {
+                  search: searchQuery,
+                },
+              },
+              {
+                email: {
+                  search: searchQuery,
+                },
+              },
+            ],
+          },
+        },
+        lastMessageId: {
+          not: null,
+        },
+      },
+      take: pageSize,
+      skip: offset,
+      include: {
+        lastMessage: true,
+        participants: true,
+      },
+    });
+
+    const count = await this.db.client().room.count({
+      where: {
+        participants: {
+          some: {
+            id: participantId,
+            OR: [
+              {
+                name: {
+                  search: searchQuery,
+                },
+              },
+              {
+                email: {
+                  search: searchQuery,
+                },
+              },
+            ],
+          },
+        },
+        lastMessageId: {
+          not: null,
+        },
+      },
+    });
+
+    const lastPage = Math.ceil(count / pageSize);
+    const nextPage = page < lastPage ? page + 1 : null;
+
+    return {
+      rooms: rooms,
+      meta: {
+        total: count,
+        pageSize: pageSize,
+        currentPage: page,
+        nextPage: nextPage,
+        lastPage: lastPage,
+      },
     };
   }
 }
