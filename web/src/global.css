@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* @plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+} */
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -114,6 +118,24 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-neutral-800;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral-800/90 transition-all duration-300;
+  }
+
   body {
     @apply bg-background text-foreground;
   }

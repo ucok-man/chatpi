@@ -28,7 +28,7 @@ export default function TabContact() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 h-[calc(100%-8rem)] overflow-y-scroll">
       {data.map((item) => (
         <div
           key={item.id}
