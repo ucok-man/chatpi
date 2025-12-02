@@ -8,3 +8,11 @@ export type User = {
   emailVerified: boolean;
   role: string;
 };
+
+export type Metadata = {
+  total: number;
+  pageSize: number;
+  currentPage: number;
+  nextPage: number | null;
+  lastPage: number;
+};

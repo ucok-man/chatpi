@@ -1,35 +1,62 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { api } from "@/lib/api";
-import type { User } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import type { Metadata, User } from "@/lib/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { useIntersectionObserver } from "usehooks-ts";
 
 export default function TabContact() {
   const query = useSearch({ from: "/chat" });
 
-  const { data, isPending, error } = useQuery({
+  const {
+    data,
+    // error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
     queryKey: ["contact:all", query.search],
-    queryFn: async () => {
+    queryFn: async ({
+      pageParam,
+    }): Promise<{
+      users: User[];
+      meta: Metadata;
+    }> => {
       if (query.search) {
-        return (await api.get(`/user?search=${query.search}`)).data as User[];
+        return (await api.get(`/user?search=${query.search}&page=${pageParam}`))
+          .data;
       } else {
-        return (await api.get(`/user`)).data as User[];
+        return (await api.get(`/user?page=${pageParam}`)).data;
       }
     },
+    initialPageParam: 1,
+    getNextPageParam: ({ meta }) => meta.nextPage,
   });
 
-  if (isPending) return <div>Loading...</div>;
-  if (error) {
+  const { isIntersecting, ref } = useIntersectionObserver({
+    threshold: 1,
+  });
+
+  // Trigger fetchNextPage when the sentinel element is visible
+  if (isIntersecting && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage();
+  }
+
+  if (status === "pending") return <div>Loading...</div>;
+  if (status === "error") {
     toast.error("Oops!!", {
       description: "Something went wrong!",
     });
     return <div>Loading...</div>;
   }
 
+  const users = data.pages.flatMap(({ users }) => users);
+
   return (
     <div className="space-y-4 h-[calc(100%-8rem)] overflow-y-scroll">
-      {data.map((item) => (
+      {users.map((item) => (
         <div
           key={item.id}
           className="flex items-center gap-3 cursor-pointer hover:bg-green-50/10 rounded-full px-3 py-2"
@@ -47,6 +74,13 @@ export default function TabContact() {
           </div>
         </div>
       ))}
+
+      {/* Sentinel element for infinite scroll */}
+      <div ref={ref} className="h-10 flex items-center justify-center">
+        {isFetchingNextPage && (
+          <p className="text-sm text-muted-foreground">Loading more...</p>
+        )}
+      </div>
     </div>
   );
 }

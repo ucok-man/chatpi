@@ -13,3 +13,11 @@ export type AuthSession = {
 };
 
 export type Headers = Context["headers"];
+
+export type Metadata = {
+  total: number;
+  pageSize: number;
+  currentPage: number;
+  nextPage: number | null;
+  lastPage: number;
+};

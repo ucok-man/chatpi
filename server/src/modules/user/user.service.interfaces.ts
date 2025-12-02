@@ -1,4 +1,4 @@
-import { AuthSession } from "@/core/types";
+import { AuthSession, Metadata } from "@/core/types";
 import { User } from "@root/prisma/generated/client";
 
 export interface IUserService {
@@ -9,5 +9,5 @@ export interface IUserService {
       pageSize: number;
     },
     auth: AuthSession
-  ): Promise<User[]>;
+  ): Promise<{ users: User[]; meta: Metadata }>;
 }
