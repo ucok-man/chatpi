@@ -6,6 +6,7 @@ export class UserController {
   constructor(private userService: IUserService) {}
 
   async getAll(dto: GetAllUserDTO, auth: AuthSession) {
-    return await this.userService.getAll(dto, auth);
+    const { meta, users } = await this.userService.getAll(dto, auth);
+    return { meta, users };
   }
 }

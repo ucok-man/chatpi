@@ -1,6 +1,6 @@
 import { Metadata } from "@/core/types";
 import { PrismaDbClient } from "@/infrastructure/database/prisma/client";
-import { ErrInternalServer } from "@/utility/http-errors";
+import { ErrInternalServer, ErrNotFound } from "@/utility/http-errors";
 import { Message, Room, User } from "@root/prisma/generated/client";
 import { IRoomService } from "./room.service.interfaces";
 
@@ -246,5 +246,24 @@ export class RoomServicePrisma implements IRoomService {
         lastPage: lastPage,
       },
     };
+  }
+
+  async findRoomFromId(roomId: string, cuid: string): Promise<Room> {
+    const room = await this.db.client().room.findUnique({
+      where: {
+        id: roomId,
+        participants: {
+          some: {
+            id: cuid,
+          },
+        },
+      },
+    });
+
+    if (!room) {
+      throw new ErrNotFound();
+    }
+
+    return room;
   }
 }

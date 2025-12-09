@@ -43,7 +43,7 @@ export default function TabMyChat() {
         .post("/room/private", {
           targetParticipantId,
         })
-        .then((res) => res.data as Room);
+        .then((res) => res.data.room as Room);
     },
     onSuccess: ({ id }) => {
       setSelectedRoomId(id);

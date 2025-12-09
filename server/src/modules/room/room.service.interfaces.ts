@@ -27,4 +27,6 @@ export interface IRoomService {
     })[];
     meta: Metadata;
   }>;
+
+  findRoomFromId(roomId: string, cuid: string): Promise<Room>;
 }
