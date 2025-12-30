@@ -1,17 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useChat } from "@/hooks/use-chat";
+import { useSelectedChat } from "@/hooks/use-selected-chat";
 import { api } from "@/lib/api";
 import type { Message, Metadata, Room, User } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useIntersectionObserver } from "usehooks-ts";
 
-export default function TabMyChat() {
+export default function LeftContentMyChat() {
   const { auth } = useLoaderData({ from: "/chat" });
   const query = useSearch({ from: "/chat" });
-  const { setSelectedRoomId } = useChat();
+
+  const { setRoom, room } = useSelectedChat();
+
   const {
     data,
     // error,
@@ -30,24 +32,11 @@ export default function TabMyChat() {
       meta: Metadata;
     }> => {
       return (
-        await api.get(`/room?search=${query?.search ?? ""}&page=${pageParam}`)
+        await api.get(`/rooms?search=${query?.search ?? ""}&page=${pageParam}`)
       ).data;
     },
     initialPageParam: 1,
     getNextPageParam: ({ meta }) => meta.nextPage,
-  });
-
-  const createPrivateRoom = useMutation({
-    mutationFn: async (targetParticipantId: string) => {
-      return await api
-        .post("/room/private", {
-          targetParticipantId,
-        })
-        .then((res) => res.data.room as Room);
-    },
-    onSuccess: ({ id }) => {
-      setSelectedRoomId(id);
-    },
   });
 
   const { isIntersecting, ref } = useIntersectionObserver({
@@ -80,11 +69,11 @@ export default function TabMyChat() {
 
         return (
           <div
-            onClick={() => createPrivateRoom.mutate(item.id)}
+            onClick={() => setRoom(item)}
             key={item.id}
             className={cn(
               "flex items-center gap-3 cursor-pointer hover:bg-green-50/10 rounded-full px-3 py-2",
-              createPrivateRoom.isPending && "pointer-events-none"
+              room?.id === item.id && "bg-green-50/10"
             )}
           >
             <div className="border-2 border-neutral-700 rounded-full bg-background/50">

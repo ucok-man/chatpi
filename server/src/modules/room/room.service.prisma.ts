@@ -23,24 +23,12 @@ export class RoomServicePrisma implements IRoomService {
     if (!room) {
       room = await this.createPrivateRoom(participantIds);
     }
-
-    const participants = await this.db.client().user.findMany({
-      where: {
-        rooms: {
-          some: {
-            id: room.id,
-          },
-        },
-      },
-    });
-
-    return {
-      ...room,
-      participants: participants,
-    };
+    return room;
   }
 
-  async createPrivateRoom(participantIds?: string[]): Promise<Room> {
+  async createPrivateRoom(
+    participantIds?: string[]
+  ): Promise<Room & { participants: User[] }> {
     if (participantIds?.length) {
       if (participantIds.length !== 2) {
         throw new ErrInternalServer("Participants ids length must be 2");
@@ -54,6 +42,9 @@ export class RoomServicePrisma implements IRoomService {
               connect: participantIds.map((id) => ({ id })),
             },
           },
+          include: {
+            participants: true,
+          },
         });
         return room;
       });
@@ -63,17 +54,20 @@ export class RoomServicePrisma implements IRoomService {
       data: {
         roomType: "private",
       },
+      include: {
+        participants: true,
+      },
     });
   }
 
   async findPrivateRoomFromParticipant(
     participantIds: string[]
-  ): Promise<Room | null> {
+  ): Promise<(Room & { participants: User[] }) | null> {
     const room = await this.db.client().room.findFirst({
       where: {
         participants: {
           every: {
-            OR: participantIds.map((id) => ({ id })),
+            id: { in: participantIds },
           },
         },
       },
@@ -86,33 +80,30 @@ export class RoomServicePrisma implements IRoomService {
       return null;
     }
 
-    if (!room.participants) {
+    if (!room.participants.length) {
       throw new ErrInternalServer(
         new Error("Room found but it should have participants")
       );
     }
 
     const sortedParticipantIds = participantIds.sort();
-    const sortedResultParticipantIds = room.participants.sort();
+    const sortedResultParticipantIds = room.participants
+      .map((p) => p.id)
+      .sort();
 
     if (sortedResultParticipantIds.length !== sortedParticipantIds.length) {
       return null;
     }
 
-    const isExactMatch = sortedResultParticipantIds.every(
-      (result, idx) => result.id === sortedParticipantIds[idx]
-    );
+    const isExactMatch = sortedResultParticipantIds.every((resultId, idx) => {
+      return resultId === sortedParticipantIds[idx];
+    });
+
     if (!isExactMatch) {
       return null;
     }
 
-    return {
-      id: room.id,
-      createdAt: room.createdAt,
-      lastMessageId: room.lastMessageId,
-      roomType: room.roomType,
-      updatedAt: room.updatedAt,
-    };
+    return room;
   }
 
   async findAllRoomFromParticipant(
@@ -138,9 +129,9 @@ export class RoomServicePrisma implements IRoomService {
           participants: {
             some: { id: participantId },
           },
-          lastMessageId: {
-            not: null,
-          },
+          // lastMessageId: {
+          //   not: null,
+          // },
         },
         include: {
           participants: true,

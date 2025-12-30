@@ -61,7 +61,7 @@ export default function SideNavigation() {
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger className="border-2 border-neutral-700 rounded-full bg-background/50 cursor-pointer">
-              <Avatar className="size-7">
+              <Avatar className="size-8">
                 <AvatarImage src={auth.data?.user.image ?? ""} />
                 <AvatarFallback>?</AvatarFallback>
               </Avatar>
@@ -77,16 +77,16 @@ export default function SideNavigation() {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-3 px-4 py-3 border-b border-border/30">
                   <div className="border-2 border-neutral-700 rounded-full bg-background/50 cursor-pointer">
-                    <Avatar className="size-8">
+                    <Avatar className="size-10">
                       <AvatarImage src={auth.data?.user.image ?? ""} />
                       <AvatarFallback>?</AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="grid text-left leading-tight min-w-0 flex-1">
-                    <span className="truncate text-sm font-medium text-foreground">
+                    <span className="truncate text-base font-medium text-foreground">
                       {auth.data?.user.name || "User"}
                     </span>
-                    <span className="truncate text-xs text-muted-foreground mt-0.5">
+                    <span className="truncate text-sm text-muted-foreground mt-0.5">
                       {auth.data?.user.email || "No email"}
                     </span>
                   </div>

@@ -1,9 +1,9 @@
 import SearchBox from "@/components/search-box";
 import { useChatTabContent } from "@/hooks/use-chat-tab-content";
-import TabContact from "../tab-contact";
-import TabMyChat from "../tab-mychat";
+import LeftContentContact from "./left-content-contact";
+import LeftContentMyChat from "./left-content-my-chat";
 
-export default function TabContent() {
+export default function LeftContent() {
   const { tab } = useChatTabContent();
 
   return (
@@ -16,8 +16,8 @@ export default function TabContent() {
         <SearchBox />
       </div>
 
-      {tab === "mychat" && <TabMyChat />}
-      {tab === "contact" && <TabContact />}
+      {tab === "mychat" && <LeftContentMyChat />}
+      {tab === "contact" && <LeftContentContact />}
     </div>
   );
 }

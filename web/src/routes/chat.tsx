@@ -1,5 +1,6 @@
+import LeftContent from "@/components/chat/left-content";
+import RightContent from "@/components/chat/right-content";
 import SideNavigation from "@/components/chat/side-navigation";
-import TabContent from "@/components/chat/tab-content";
 import type { AuthSession } from "@/lib/auth";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import z from "zod";
@@ -31,8 +32,8 @@ function RouteComponent() {
   return (
     <div className="flex flex-row h-screen w-full">
       <SideNavigation />
-      <TabContent />
-      <div>[CHAT BOX]</div>
+      <LeftContent />
+      <RightContent />
     </div>
   );
 }
